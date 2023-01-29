@@ -6,7 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
+import { convertToEn } from 'src/common/helper/convert-fr-number-en';
 
 @Controller('users')
 export class UsersController {
@@ -36,6 +36,7 @@ export class UsersController {
     const salt = 10;
     createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
     createUserDto.profilePicture = profilePicture.path;
+    createUserDto.credit = convertToEn(createUserDto.credit);
     const newUser = (await this.usersService.create(createUserDto)).toObject();
     delete newUser.password;
     return newUser;
