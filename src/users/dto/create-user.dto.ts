@@ -5,9 +5,9 @@ export class CreateUserDto {
 
     passwordConfirm: string;
 
-    credit: string;
+    credit: number;
 
-    profilePicture: string
+    profilePicture: string;
 
     phoneNumber: string[];
 }
