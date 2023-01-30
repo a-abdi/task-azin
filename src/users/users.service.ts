@@ -26,11 +26,7 @@ export class UsersService {
     return await this.userModel.findOne({_id}).select('+password').exec();;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(_id: string, updateUserDto: UpdateUserDto) {
+    return await this.userModel.findOneAndUpdate({_id}, updateUserDto, {new: true});;
   }
 }

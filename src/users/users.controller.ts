@@ -8,6 +8,7 @@ import { extname } from 'path';
 import * as bcrypt from 'bcrypt';
 import { convertToEn } from 'src/common/helper/convert-fr-number-en';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { mongoIdParams } from 'src/common/class/mongo-id-params';
 
 @Controller('users')
 export class UsersController {
@@ -54,13 +55,15 @@ export class UsersController {
     return this.usersService.findOneByID(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Patch(':_id')
+  async update(@Param() params: mongoIdParams, @Body() updateUserDto: UpdateUserDto) {
+    const { credit } = updateUserDto;
+    const { _id } = params;
+    const user = await this.usersService.findOneByID(_id);
+    if ( credit ) {
+      const totalCredit: number = parseInt(convertToEn(""+credit)) + (user.credit);
+      updateUserDto.credit = ""+totalCredit; 
+    }
+    return this.usersService.update(params._id, updateUserDto);
   }
 }
